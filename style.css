@@ -1,0 +1,176 @@
+* { box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; padding: 0;
+    background: #1e272e; color: #fff;
+    display: flex; justify-content: center; align-items: center;
+    height: 100vh; overflow: hidden;
+}
+.screen { display: none; width: 100%; height: 100%; position: absolute; justify-content: center; align-items: center; }
+.screen.active { display: flex; }
+.card {
+    background: rgba(0,0,0,0.85); padding: 30px; border-radius: 15px;
+    width: 90%; max-width: 400px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+input, select {
+    width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px;
+    border: 1px solid #444; background: #222; color: #fff; font-size: 16px;
+}
+button {
+    width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 18px;
+    font-weight: bold; cursor: pointer; transition: 0.2s; background: #3498db; color: #fff;
+}
+button:hover { opacity: 0.9; }
+button:disabled { background: #555; cursor: not-allowed; }
+.color-picker { margin-bottom: 20px; }
+.colors { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+.color-opt {
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    border: 4px solid transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.color-opt.active { border-color: #fff; transform: scale(1.1); }
+.color-opt.red { background: #d62828; }
+.color-opt.green { background: #15803d; }
+.color-opt.yellow { background: #facc15; }
+.color-opt.blue { background: #0284c7; }
+
+.game-container {
+    display: flex; flex-direction: row; gap: 24px; padding: 10px;
+    height: 100vh; max-width: 100vw; justify-content: center; align-items: center;
+}
+
+/* Classic Yellow Wooden/Cardboard Board Frame */
+.board-frame {
+    padding: 14px;
+    background: #facc15;
+    border-radius: 10px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.65);
+    border: 3px solid #ca8a04;
+    flex-shrink: 0;
+}
+
+#board {
+    width: 76vh; height: 76vh; background: #fff;
+    display: grid; grid-template-columns: repeat(15, 1fr); grid-template-rows: repeat(15, 1fr);
+    border: 3px solid #111; position: relative;
+}
+
+.cell {
+    border: 1px solid #333;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff;
+    font-weight: bold;
+}
+
+/* Quadrant Bases matching exact reference image */
+.base { padding: 18px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #111; }
+.inner-base {
+    width: 100%; height: 100%; background: #fff;
+    display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
+    gap: 14px; padding: 14px; border: 1.5px solid #111;
+}
+.green-base { grid-area: 1 / 1 / 7 / 7; background: #15803d; }
+.yellow-base { grid-area: 1 / 10 / 7 / 16; background: #facc15; }
+.red-base { grid-area: 10 / 1 / 16 / 7; background: #d62828; }
+.blue-base { grid-area: 10 / 10 / 16 / 16; background: #0284c7; }
+
+.base-spot {
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid #111;
+}
+.green-spot { background: #15803d; }
+.yellow-spot { background: #facc15; }
+.red-spot { background: #d62828; }
+.blue-spot { background: #0284c7; }
+
+/* Home-Going Pathways (Middle row/column of each arm) */
+.cell.home-path-green { background: #15803d !important; }
+.cell.home-path-yellow { background: #facc15 !important; }
+.cell.home-path-blue { background: #0284c7 !important; }
+.cell.home-path-red { background: #d62828 !important; }
+
+/* Safe Star Stops */
+.cell.safe::after {
+    content: '★';
+    position: absolute;
+    font-size: 20px;
+    color: #9ca3af;
+    -webkit-text-stroke: 1px #111;
+    pointer-events: none;
+}
+
+/* Entry Arrows */
+.cell.arrow-green::after { content: '➜'; color: #15803d; font-size: 18px; }
+.cell.arrow-yellow::after { content: '⬇'; color: #ca8a04; font-size: 18px; }
+.cell.arrow-blue::after { content: '⬅'; color: #0284c7; font-size: 18px; }
+.cell.arrow-red::after { content: '⬆'; color: #d62828; font-size: 18px; }
+
+/* Center 4 Triangles with HOME labels */
+.center-home {
+    grid-area: 7 / 7 / 10 / 10;
+    position: relative;
+    border: 1.5px solid #111;
+    background: #fff;
+}
+.home-triangle {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 900; letter-spacing: 0.5px;
+}
+.green-tri {
+    background: #15803d; color: #fff;
+    clip-path: polygon(0 0, 50% 50%, 0 100%);
+    justify-content: flex-start; padding-left: 4px;
+}
+.green-tri span { transform: rotate(90deg); }
+
+.yellow-tri {
+    background: #facc15; color: #fff;
+    clip-path: polygon(0 0, 100% 0, 50% 50%);
+    align-items: flex-start; padding-top: 4px;
+}
+
+.blue-tri {
+    background: #0284c7; color: #fff;
+    clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+    justify-content: flex-end; padding-right: 4px;
+}
+.blue-tri span { transform: rotate(-90deg); }
+
+.red-tri {
+    background: #d62828; color: #fff;
+    clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+    align-items: flex-end; padding-bottom: 4px;
+}
+
+/* Tokens (High-contrast pawn style) */
+.token {
+    width: 72%; height: 72%; border-radius: 50%;
+    border: 2.5px solid #fff; cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 0 0 2px #111;
+    transition: transform 0.1s ease;
+    z-index: 10;
+}
+.token:hover { transform: scale(1.18); }
+.token.movable { animation: pulse 1s infinite; }
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,255,255, 0.95), inset 0 0 0 2px #111; }
+    70% { box-shadow: 0 0 0 10px rgba(255,255,255, 0), inset 0 0 0 2px #111; }
+    100% { box-shadow: 0 0 0 0 rgba(255,255,255, 0), inset 0 0 0 2px #111; }
+}
+
+/* Side Panel */
+.side-panel {
+    width: 280px; display: flex; flex-direction: column; gap: 15px;
+    height: 79vh; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+#game-log { flex-grow: 1; overflow-y: auto; font-size: 13px; line-height: 1.4; color: #f1f2f6; display: flex; flex-direction: column-reverse; }
+#controls-ui { text-align: center; padding: 15px; background: #2f3640; border-radius: 8px; }
+#turn-indicator { font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #fff; text-transform: uppercase; }
+#dice-box { font-size: 35px; font-weight: bold; margin: 5px 0; min-height: 40px; color: #f1f2f6; }
+#roll-dice-btn { background: #2ecc71; }
+#roll-dice-btn:disabled { background: #555; }
